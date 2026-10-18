@@ -145,7 +145,7 @@ Windows 的 **UIPI**（用户界面特权隔离）规定：普通权限进程的
 ```
 kuaijiejian.py                 主程序（单文件，约 3400 行）
 config.example.json            配置模板（真实 config.json 不入库）
-tests/test_kuaijiejian.py      单元测试（71 项）
+tests/test_kuaijiejian.py      单元测试（73 项）
 start-kuaijiejian.bat          启动（自动请求管理员权限）
 start-kuaijiejian-unelevated.bat  启动（不提权，接受 UIPI 限制）
 start-kuaijiejian-console.bat  带控制台启动，排查用
@@ -271,9 +271,10 @@ python build_portable.py --no-python  :: 只打包程序，目标电脑需自带
 
 ## 已验证 / 未验证
 
-- 已通过：**71 项单元测试**（键名表、注入序列构造、配置校验与往返、规则匹配与优先级、
+- 已通过：**73 项单元测试**（键名表、注入序列构造、配置校验与往返、规则匹配与优先级,
   生效范围与「不生效原因」、钩子入口的吞键/透传/重复键/注入签名、热键武装与松开切换、
-  丢失按下后的恢复、异步日志、钩子静默失效看门狗、INPUT 结构布局 40 字节、GUI 心跳续命）。
+  丢失按下后的恢复、异步日志、钩子静默失效看门狗、INPUT 结构布局 40 字节、GUI 心跳续命、
+  CLI 在非 UTF-8 控制台下的输出）。
 - 已通过：Windows 11（10.0.26100）+ Python 3.9.12 实测 `SendInput` 成功发送 6/6 个事件；
   钩子安装成功；界面自检与 `--diag` / `--watch` / `--keys` 可用。
 - 未验证：真实桌面环境下由 CI 自动执行（CI 只跑纯逻辑测试，不安装键盘钩子）；

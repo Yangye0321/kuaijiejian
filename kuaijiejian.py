@@ -37,7 +37,7 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Sequence, Set, Tuple
 
 APP_NAME = "快捷键管理工具"
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.0.1"
 APP_TITLE = "%s v%s" % (APP_NAME, APP_VERSION)
 CONFIG_FILENAME = "config.json"
 MUTEX_NAME = "Global\\kuaijiejian_tool_single_instance_v1"
@@ -54,6 +54,35 @@ _LOG_THREAD: Optional[threading.Thread] = None
 
 IS_WINDOWS = os.name == "nt"
 GUI_AVAILABLE = False
+
+
+def setup_console_encoding() -> None:
+    """让命令行输出在这些环境里也不会崩：
+
+    * GitHub Actions / 英文 Windows 的控制台默认是 cp1252、cp437 甚至 ascii；
+    * 本工具的命令行输出含中文，直接 print 会抛 UnicodeEncodeError。
+
+    做法：能设控制台代码页就设成 UTF-8（65001），然后把 stdout/stderr
+    重新配置为 UTF-8 + errors="replace" 兜底。失败也绝不抛异常。
+    """
+    if IS_WINDOWS:
+        try:
+            kernel32.SetConsoleOutputCP(65001)
+            kernel32.SetConsoleCP(65001)
+        except Exception:
+            pass
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            if stream is None:
+                continue
+            reconfigure = getattr(stream, "reconfigure", None)
+            if reconfigure is None:
+                continue
+            reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
+
+
 if IS_WINDOWS:
     try:
         import tkinter as tk
@@ -3465,6 +3494,8 @@ def gui_failure_prompt(exc: BaseException) -> None:
 
 def main(argv: Optional[List[str]] = None) -> int:
     argv = sys.argv[1:] if argv is None else argv
+    # 必须在任何 print 之前执行：CI / 英文控制台下中文输出会 UnicodeEncodeError
+    setup_console_encoding()
     parser = argparse.ArgumentParser(description=APP_TITLE)
     parser.add_argument("--version", action="version", version=APP_TITLE,
                         help="显示版本号并退出")
@@ -3531,6 +3562,7 @@ def main(argv: Optional[List[str]] = None) -> int:
 
 def cli_entry() -> int:
     """带兜底异常处理的入口：失败时写日志 + 弹错误框，不静默退出。"""
+    setup_console_encoding()
     try:
         return main()
     except SystemExit:

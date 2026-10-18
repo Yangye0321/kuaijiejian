@@ -3,6 +3,18 @@
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## 1.0.1 — 2026-10-18
+
+### 修复
+
+- **命令行在非 UTF-8 控制台下崩溃**：`--check-config` 等命令输出中文时，
+  在 GitHub Actions（cp1252）、英文版 Windows（cp1252/cp437）会抛
+  `UnicodeEncodeError: 'charmap' codec can't encode characters`。
+  现在启动时会把控制台代码页切到 UTF-8（65001）并把 stdout/stderr 重新配置为
+  UTF-8 + `errors="replace"` 兜底；命令行在无头 / CI / 管道环境下也能正常输出。
+- CI 增加 `PYTHONIOENCODING=utf-8` 与 `PYTHONUTF8=1`，并新增一条回归测试：
+  用 `PYTHONIOENCODING=cp1252` 的子进程跑 `--check-config`，必须成功。
+
 ## 1.0.0 — 2026-10-18
 
 首个公开发布版本。功能已稳定，并补齐开源发布所需的许可证、忽略清单、示例配置、CI 与文档。

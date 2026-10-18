@@ -10,6 +10,11 @@ jobs:
   test:
     name: Windows / Python ${{ matrix.python-version }}
     runs-on: windows-latest
+    env:
+      # The Windows runner console is cp1252; the CLI prints Chinese.
+      # kuaijiejian.py also reconfigures its own stdout to UTF-8, this is belt-and-suspenders.
+      PYTHONIOENCODING: utf-8
+      PYTHONUTF8: "1"
     strategy:
       fail-fast: false
       matrix:

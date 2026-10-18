@@ -780,6 +780,43 @@ class TestMisc(unittest.TestCase):
         path = K.default_config_path()
         self.assertTrue(path.endswith("config.json"))
 
+    def test_cli_survives_legacy_console_encoding(self):
+        """回归：非 UTF-8 控制台下（CI 的 cp1252），CLI 输出中文不能崩。
+
+        以前在 GitHub Actions 上跑 `--check-config` 会抛
+        UnicodeEncodeError: 'charmap' codec can't encode characters。
+        """
+        import subprocess
+
+        root = os.path.dirname(os.path.abspath(K.__file__))
+        cfg = os.path.join(root, "config.example.json")
+        self.assertTrue(os.path.isfile(cfg))
+        env = dict(os.environ)
+        env["PYTHONIOENCODING"] = "cp1252"
+        env.pop("PYTHONUTF8", None)
+        proc = subprocess.run(
+            [sys.executable, os.path.join(root, "kuaijiejian.py"),
+             "--check-config", "--config", cfg],
+            cwd=root, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            timeout=120)
+        self.assertEqual(
+            proc.returncode, 0,
+            "CLI 在 cp1252 下失败：\nstdout=%r\nstderr=%r"
+            % (proc.stdout[-800:], proc.stderr[-800:]))
+
+    def test_setup_console_encoding_is_safe(self):
+        """setup_console_encoding 在任意流状态下都不能抛异常。"""
+        import io
+        original_out, original_err = sys.stdout, sys.stderr
+        try:
+            sys.stdout = io.StringIO()
+            sys.stderr = io.StringIO()
+            K.setup_console_encoding()
+            sys.stdout = None
+            K.setup_console_encoding()
+        finally:
+            sys.stdout, sys.stderr = original_out, original_err
+
 
 # ---------------------------------------------------------------------------
 # GUI 心跳（需要图形环境，没有就跳过）
