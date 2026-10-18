@@ -80,12 +80,19 @@ setlocal
 cd /d "%~dp0"
 
 if defined KJJ_ELEVATED goto :run
-fsutil dirty query %SYSTEMDRIVE% >nul 2>&1
-if not errorlevel 1 goto :run
+rem Already elevated? High integrity = S-1-16-12288, System = S-1-16-16384.
+rem (whoami /groups is more reliable than fsutil, which can misfire.)
+whoami /groups 2>nul | findstr /C:"S-1-16-12288" >nul 2>&1 && goto :run
+whoami /groups 2>nul | findstr /C:"S-1-16-16384" >nul 2>&1 && goto :run
 
 echo Requesting administrator privileges...
 >>"%~dp0startup.log" echo [%DATE% %TIME%] ===== launcher: portable bat requesting elevation =====
-powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%~f0' -Verb RunAs -ArgumentList '%*'"
+rem %* is empty when double-clicked; -ArgumentList '' would be rejected.
+if "%~1"=="" (
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%~f0' -Verb RunAs"
+) else (
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process -FilePath '%~f0' -Verb RunAs -ArgumentList '%*'"
+)
 if errorlevel 1 (
     echo.
     echo   Elevation was cancelled or failed.

@@ -37,7 +37,7 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Sequence, Set, Tuple
 
 APP_NAME = "快捷键管理工具"
-APP_VERSION = "1.0.1"
+APP_VERSION = "1.0.2"
 APP_TITLE = "%s v%s" % (APP_NAME, APP_VERSION)
 CONFIG_FILENAME = "config.json"
 MUTEX_NAME = "Global\\kuaijiejian_tool_single_instance_v1"

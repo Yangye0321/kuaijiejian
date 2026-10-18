@@ -3,6 +3,18 @@
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## 1.0.2 — 2026-10-18
+
+### 修复
+
+- **双击启动（不带参数）提权失败**：`-ArgumentList '%*'` 在 `%*` 为空时会变成
+  `-ArgumentList ''`，PowerShell 直接报「参数为 Null 或空」，导致提权失败、
+  只能看到 "Elevation was cancelled or failed"。现在只在有参数时才传 `-ArgumentList`。
+- **管理员身份判断改用完整性级别**：由 `fsutil dirty query` 改为检查
+  `whoami /groups` 中的 `S-1-16-12288`（High，已提权）/`S-1-16-16384`（System），
+  避免个别机器上 `fsutil` 误判成非管理员而反复弹 UAC。
+- 提权失败时的提示改为指向 `start-kuaijiejian-unelevated.bat`（原提示让人敲命令，容易出错）。
+
 ## 1.0.1 — 2026-10-18
 
 ### 修复
