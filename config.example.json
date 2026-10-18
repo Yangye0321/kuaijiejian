@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "engine_running": true,
+  "mode": "normal",
+  "toggle_hotkey": {
+    "vk": 123,
+    "extended": false
+  },
+  "panic_hotkey": {
+    "vk": 19,
+    "extended": false
+  },
+  "apply_to_all_apps": false,
+  "app_whitelist": [],
+  "numlock_off_follows_numpad": true,
+  "hold_ms": 0,
+  "debug_log": true,
+  "log_all_keys": false,
+  "debug_file_log": false,
+  "debug_raw_keys": false,
+  "hotkey_debounce_ms": 300,
+  "mode_restore_on_start": false,
+  "rules": [
+    {
+      "enabled": false,
+      "note": "示例A：小键盘 . → Alt+Ctrl+小键盘0",
+      "trigger": {
+        "vk": 110,
+        "extended": false
+      },
+      "output": [
+        {
+          "vk": 164,
+          "extended": false
+        },
+        {
+          "vk": 162,
+          "extended": false
+        },
+        {
+          "vk": 96,
+          "extended": false
+        }
+      ],
+      "app_filter": false
+    },
+    {
+      "enabled": false,
+      "note": "示例B：F8 → 网易云「喜欢」快捷键（默认 Ctrl+Alt+L，请按实际键位改）",
+      "trigger": {
+        "vk": 119,
+        "extended": false
+      },
+      "output": [
+        {
+          "vk": 162,
+          "extended": false
+        },
+        {
+          "vk": 164,
+          "extended": false
+        },
+        {
+          "vk": 76,
+          "extended": false
+        }
+      ],
+      "app_filter": true
+    }
+  ]
+}

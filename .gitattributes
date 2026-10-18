@@ -1,0 +1,13 @@
+* text=auto
+
+# Windows 批处理必须有 CRLF，否则某些环境下换行会被解析异常
+*.bat text eol=crlf
+
+*.py  text eol=lf
+*.md  text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+
+# 二进制
+*.ico binary
+*.png binary

@@ -1,0 +1,39 @@
+name: tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Windows / Python ${{ matrix.python-version }}
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Check tkinter is available
+        run: python -c "import tkinter, sys; print('tk', tkinter.TkVersion, 'python', sys.version)"
+
+      - name: Byte-compile
+        run: python -m py_compile kuaijiejian.py
+
+      - name: Unit tests
+        run: python tests/test_kuaijiejian.py
+
+      - name: Config self check
+        run: python kuaijiejian.py --check-config --config config.example.json
+
+      - name: Simulation (no real key injection)
+        run: python kuaijiejian.py --simulate --config config.example.json

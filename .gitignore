@@ -1,0 +1,33 @@
+# ---- 运行时生成，不入库 ----
+config.json
+startup.log
+startup.log.tmp
+
+# ---- 便携版产物（用 build_portable.py 现场生成，含随包 Python，体积大）----
+portable/
+portable.zip
+build/
+dist/
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# ---- 图标预览（生成物）----
+icon/preview-*.png
+
+# ---- 编辑器/系统 ----
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# ---- 本地诊断输出 ----
+probe.log
+launch.log
+report.txt
+boot-probe.log
