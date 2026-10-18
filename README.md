@@ -1,6 +1,6 @@
 # 快捷键管理工具（Windows）
 
-[![tests](https://github.com/USER/REPO/actions/workflows/tests.yml/badge.svg)](https://github.com/USER/REPO/actions/workflows/tests.yml)
+[![tests](https://github.com/Yangye0321/kuaijiejian/actions/workflows/tests.yml/badge.svg)](https://github.com/Yangye0321/kuaijiejian/actions/workflows/tests.yml)
 ![platform](https://img.shields.io/badge/platform-Windows%2010%2F11-blue)
 ![python](https://img.shields.io/badge/python-3.8%2B-blue)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
